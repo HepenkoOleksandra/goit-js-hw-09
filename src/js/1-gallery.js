@@ -2,56 +2,25 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { images } from "./images";
 
-const galleryList = document.querySelector('.gallery');
+// Створення розмітки
 
-galleryList.addEventListener('click', onGalleryListClick);
+const galleryList = document.querySelector('.gallery');
 
 const markup = images.map(({ preview, original, description }) => {
     return `
     <li class="gallery-item">
       <a class="gallery-link" href="${original}">
-        <img
-          class="gallery-image"
-          src="${preview}"
-          data-source="${original}"
-          alt="${description}"
-        />
+        <img class="gallery-image" src="${preview}" alt="${description}" />
       </a>
     </li>`
 }).join('\n');
 
 galleryList.insertAdjacentHTML("beforeend", markup);
 
+// Відкриття модального вікна
 
-let gallery = new SimpleLightbox('.gallery a');
-const instance = basicLightbox.create(
-  `<img class="modal-image" src="" alt="Modal image" />`, {
-  
-    onShow: (instance) => {
-      document.addEventListener('keydown', onEscPress)
-    },
-    
-    onClose: (instance) => {
-      document.removeEventListener('keydown', onEscPress)
-    }
-  }
-)
-  
-function onGalleryListClick(e) {
-  e.preventDefault();
-
-  if (e.target.nodeName !== 'IMG') {
-    return;
-  }
- 
-  const modalImg = instance.element().querySelector('.modal-image');
-  modalImg.src = e.target.dataset.source;
-  modalImg.alt = e.target.alt;
-  instance.show()
-}
-
-function onEscPress(e) {
-  if (e.code === "Escape") {
-    instance.close()
-  }
-}
+let gallery = new SimpleLightbox('.gallery a', {
+  overlayOpacity: 0.9,
+  captionsData: "alt",
+  captionDelay: 500
+});
